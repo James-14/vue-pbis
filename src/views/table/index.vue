@@ -40,8 +40,9 @@
       </el-table-column>
       <el-table-column min-width="100px" label="Title">
         <template slot-scope="scope">
-          <el-input v-show="scope.row.edit" size="small" v-model="scope.row.title"></el-input>
+          <el-tooltip class="item" effect="dark" :content="scope.row.title" placement="bottom-start">
           <span v-show="!scope.row.edit">{{ scope.row.title }}</span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="Author" width="110" align="center">
@@ -143,7 +144,7 @@ export default {
     updateRow(index, row) {
       this.dialogVisible = true
       this.eidtIndex = index
-      this.editRow = row
+      this.editRow = Object.assign({}, row)
     },
     saveInfo: function(userInfo) {
       if (this.eidtIndex != -1) {

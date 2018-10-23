@@ -68,7 +68,7 @@ export default {
     userInfo: function() {
       if(this.item.title!=undefined && this.item.title!=''){
          this.item.region='shanghai'
-         return this.objData=Object.assign({}, this.item)
+         return this.objData=this.item
       }
       else
       {
@@ -101,7 +101,7 @@ export default {
       })
     },
     cancelDialog(formName) {
-      this.$refs[formName].resetFields()
+      this.$refs['form'].resetFields() 
       this.$emit('close-dialog')
     },
     getStatus(){
