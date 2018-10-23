@@ -5,6 +5,13 @@
         <el-form-item label="标题" prop="title">
           <el-input v-model="userInfo.title"></el-input>
         </el-form-item>
+
+        <el-form-item label="活动区域">
+        <el-select v-model="userInfo.region" placeholder="活动区域">
+          <el-option v-for="item in dataStatus" :label="item.label" :value="item.value" ></el-option>
+        </el-select>
+      </el-form-item>
+
         <el-form-item label="作者">
           <el-input v-model="userInfo.author"></el-input>
         </el-form-item>
@@ -49,21 +56,33 @@ export default {
       objData: {
         title:'',
         author:'',
+        region:'',
         pageviews:'',
         status:'published',
         display_time:'2000-01-01'
-      }
+      },
+      dataStatus:[],
     }
   },
   computed: {
     userInfo: function() {
       if(this.item.title!=undefined && this.item.title!=''){
+         this.item.region='shanghai'
          return this.objData=Object.assign({}, this.item)
       }
-        return this.objData
+      else
+      {
+        return this.objData=clearObject(this.objData)
+      }
     }
   },
+  created() {
+    this.fetchData()
+  },
   methods: {
+    fetchData(){
+      this.dataStatus = this.getStatus()
+    },
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {
@@ -83,8 +102,10 @@ export default {
     },
     cancelDialog(formName) {
       this.$refs[formName].resetFields()
-      this.userInfo=clearObject(this.userInfo)
       this.$emit('close-dialog')
+    },
+    getStatus(){
+      return [{label:'beijing', value:'beijing'},{label:'shanghai', value:'shanghai'}]
     }
   }
 }

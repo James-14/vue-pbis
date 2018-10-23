@@ -6,8 +6,7 @@
       </el-form-item>
       <el-form-item label="活动区域">
         <el-select v-model="formInline.region" placeholder="活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+          <el-option v-for="item in dataStatus" :label="item.label" :value="item.value" ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="审批人">
@@ -20,8 +19,9 @@
       </el-form-item>
       <template v-if="seen">
         <el-form-item label="日期">
-          <el-date-picker class="input-date-class" v-model="formInline.starDate" type="date" placeholder="选择日期">
-          </el-date-picker>&nbsp;&nbsp;-&nbsp;&nbsp;<el-date-picker class="input-date-class"  v-model="formInline.endDate" type="date" placeholder="选择日期">
+          <el-date-picker class="input-date-class" key="startDate" v-model="formInline.startDate" type="date" placeholder="选择日期">
+          </el-date-picker>&nbsp;&nbsp;-&nbsp;&nbsp;
+          <el-date-picker class="input-date-class" key="endDate"  v-model="formInline.endDate" type="date" placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="吃啥">
@@ -86,6 +86,7 @@
 
 <script>
 import { getList } from '@/api/table'
+import { getDictionary } from '@/api/dictionary'
 import edit from './edit'
 
 export default {
@@ -112,6 +113,7 @@ export default {
       total: 50,
       currentPage: 1,
       seen: false,
+      dataStatus:[],
       searchIcon: 'el-icon-arrow-down',
       formInline: {
         user: '',
@@ -128,12 +130,15 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getList(this.listQuery).then(response => {
+      getDictionary('area').then(response => {
+        this.dataStatus = response.dictList;
+        getList(this.listQuery).then(response => {
         response.items[0].edit = false
         response.items[1].edit = false
         this.list = response.items
         this.listLoading = false
       })
+      })      
     },
     updateRow(index, row) {
       this.dialogVisible = true
@@ -160,6 +165,10 @@ export default {
       this.dialogVisible = false
     },
     onSubmit() {
+      console.log(this.formInline.radio2)
+      console.log(this.formInline.region)
+      console.log(this.formInline.startDate)
+      console.log(this.formInline.endDate)
       console.log('submit!')
     },
     adSearch() {
